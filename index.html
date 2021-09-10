@@ -28,21 +28,24 @@
                 <!-- search form-->
                 <form id="searchForm" class="text-center text-wrap">
                     <label id="searchLabel" form="searchInput">Search by City</label>
-                    <input type="text" form="searchForm" name="searchBox" class="form=control text-input" />
+                    <input type="text" form="searchForm" name="searchBox" class="form=control cityInput text-input" />
                     <button type="submit" form="searchForm" id="searchBtn" class="btn btn-primary btn-block"><i
                             class="fas fa-search"></i></button>
-                    <button type="reset" form="searchForm" id="resetBtn" class="btn btn-danger btn-block"><i
+                    <button type="reset" form="searchForm" id="resetBtn" onclick="resetClick()" class="btn btn-danger btn-block"><i
                             class="fas fa-eraser"></i></button>
                 </form>
                 <!-- saved search history  section-->
+                <h3>Recent Search</h3>
                 <div id="searchHistory" class="card-body"></div>
             </section>
             <!-- section for results -->
             <section id="resultsSection" class="results col-lg-9 card">
                 <!-- current forecast sec -->
-                <div id="currentWeather" class="currentSec card-body border-secondary"></div>
+                <h3 id="currentWeather" ></h3>
+                <div class="currentSec card-body border-secondary"></div>
                 <!-- 5 day forecast -->
                 <section>
+                    <h3>5 Day Weather Forecast</h3>
                     <div id="weatherForecast" class="forecastWeather card-body border-secondary">
                         <div id="forecastResults" class="forecastSection card-body border-secondary">
                         </div>
