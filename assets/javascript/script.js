@@ -1,6 +1,6 @@
 var searchHistory = [];
 // var for the DOM manipulation
-var date = moment().format("ll");
+
 var searchSection = document.getElementById("#search-section");
 var searchForm = document.getElementById("#searchForm");
 var searchTitle = document.getElementById("#searchLabel");
@@ -13,19 +13,10 @@ var weeklyWeather = document.getElementById("#weatherForecast");
 var currentSec = document.querySelector(".currentSec");
 var weatherForecastResults = document.getElementById("#forecastResults");
 
-// weather forecast variables for items in main section of forecast
-var cityWeather = document.createElement("div");
-var cityInfo = document.createElement("div");
-var nameOfCity = document.createElement("div");
-var currentTemp = document.createElement("div");
-var humidityInfo = document.createElement("div");
-var windInfo = document.createElement("div");
-var uvIndexInfo = document.createElement("h3");
-var uvSection = document.createElement("div");
+var request = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=0e0813c191c9f9bae9d97919acde6e10`;
+var forecastReq = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=0e0813c191c9f9bae9d97919acde6e10`;
 
-var apiKey = "0e0813c191c9f9bae9d97919acde6e10";
-var request = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${apiKey}`;
-var forecastReq = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}`;
+const dates = moment().format("dddd, MMM Do YYYY");
 
 var cityName = document.querySelector(".cityInput");
 
@@ -36,48 +27,66 @@ var submitSearch = function (event) {
   var findCity = cityName.value.trim();
 
   if (findCity) {
-    forecastRequest(findCity);
+    request(findCity);
 
     currentResults.textContent = "";
     cityName.textContent = ";";
+    getData();
   } else {
     alert("Please enter a city");
   }
+};
 
-  // save history
+// fetch weather
+
+function getData(cityName) {
+  const request = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${apiKey}`;
+  $(".currentSec").css("visibility", "visible");
+
+  fetch(request)
+    .then((res) => res.json())
+    .then((data) => {
+      $(".currentSec").empty();
+
+      let card = $("<div>").addClass("cardBody");
+      let currentWeather = $("<h2>")
+        .addClass("currentWeather")
+        .text(`${data.cityName}`);
+      let title = $("<h4>").addClass("dates").text(dates);
+      let temp = $("<p>")
+        .addClass("currentTemp")
+        .text(`Temperature: ${data.list[0].temp}°F`);
+      let wind = $("<p>").addClass(`Wind: ${data.list[0].wind.speed}M/H`);
+      card.append(currentWeather, title, temp, wind);
+      $(".currentSec").append(card);
+    });
+
+  var saveSearchReq = function () {
+    localStorage.setItem(
+      "searchHistory",
+      JSON.stringify(JSON.stringify(searchHistory))
+    );
+  };
   saveSearchReq();
-
   searchHistory(city);
-};
+}
 
-var saveSearchReq = function () {
-  localStorage.setItem("cities", JSON.stringify(cities));
-};
-// display current weather/display forecastReq by submitSearch event
-var displayForecast = function (data, citySearch) {
-  resultsSec.textContent = "";
-  searchSection.textContent = searchCity;
-
-  // append results
-};
 // function to render forecast
 // function for UV index
-var currentDay = document.createElement("span");
-currentDay.textContent = "(" + moment(weather.dt.value);
+// var currentDay = document.createElement("span");
+// currentDay.textContent = "(" + moment(weather.dt.value);
 // event listener for submit button and searchcontainer
+
+// fetch Icons
+var iconcode = forecastReq[0].icon;
+var iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
+$("#wicon").attr("src", iconurl);
 
 // fetch the 5 day forecast
 
-fiveDayForecast(findCity);
-
-// function to fetch forecast from API
-var forecastRequest = function (res) {
-  fetch(request).then(function (response) {
-    response.json().then(function (data) {
-      displayForecast(res, data);
-    });
-  });
-};
+// var fiveDayForecast = function (res) {
+//   fetch()(findCity);
+// };
 
 searchButton.addEventListener = ("click", submitSearch);
-resetButton.addEventListener("click", resetClick());
+// resetButton.addEventListener("click", resetClick);
